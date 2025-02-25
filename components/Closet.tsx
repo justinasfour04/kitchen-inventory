@@ -3,6 +3,8 @@ import {
   ShelfWithItems,
   ShelvesController,
 } from "../controllers/shelves/shelves.controller.ts";
+import { InventoryController } from "../controllers/inventory/inventory.controller.ts";
+import { InventoryItem } from "../controllers/inventory/inventory.types.ts";
 import ClosetShelf from "../islands/ClosetShelf.tsx";
 
 export const handler: Handlers<ShelfWithItems[]> = {
@@ -13,13 +15,51 @@ export const handler: Handlers<ShelfWithItems[]> = {
   },
   async POST(req, ctx) {
     const shelvesController = new ShelvesController();
+    const inventoryController = new InventoryController();
 
     // Handle form data submission
     const formData = await req.formData();
     const name = formData.get("name")?.toString();
+    const barcode = formData.get("barcode")?.toString();
+    const shelfId = formData.get("shelfId")?.toString();
+    const action = formData.get("action")?.toString();
 
-    if (name) {
+    // New item fields
+    const itemName = formData.get("itemName")?.toString();
+    const quantity = formData.get("quantity")?.toString() || "1";
+    const unit = formData.get("unit")?.toString() || "item";
+    const expirationDate = formData.get("expirationDate")?.toString() || "";
+
+    if (action === "addShelf" && name) {
       await shelvesController.addShelf({ name });
+    } else if (action === "addItem" && barcode && shelfId) {
+      // Search for item by barcode
+      const item = await inventoryController.searchByBarcode(barcode);
+
+      if (item) {
+        // Add existing item to the selected shelf
+        await inventoryController.addInventoryToShelf(Number(shelfId), item);
+      } else if (itemName) {
+        // Create a new item if name is provided
+        const newItem: InventoryItem = {
+          barcode,
+          name: itemName,
+          quantity: Number(quantity),
+          imageUrl: "",
+          unit,
+          expirationDate: new Date(expirationDate),
+          minimumQuantity: 0,
+          notes: "",
+        };
+
+        // Add the new item to the selected shelf
+        await inventoryController.addInventoryToShelf(Number(shelfId), newItem);
+      } else {
+        // If item not found and no name provided, log an error
+        console.log(
+          `Item with barcode ${barcode} not found and no name provided to create it`,
+        );
+      }
     }
 
     const shelves = await shelvesController.getShelves();
@@ -46,6 +86,7 @@ export default function Closet({ data }: { data: ShelfWithItems[] }) {
             required
             class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <input type="hidden" name="action" value="addShelf" />
           <button
             type="submit"
             class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -55,6 +96,7 @@ export default function Closet({ data }: { data: ShelfWithItems[] }) {
         </form>
       </div>
 
+      {/* Shelves and their contents */}
       <div data-island="closet-shelf">
         <ClosetShelf shelves={shelves} />
       </div>

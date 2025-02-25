@@ -19,17 +19,18 @@ export class InventoryController {
     }
   }
 
-  async addInventory(inventory: InventoryItem): Promise<void> {
+  async addInventoryToShelf(shelfId: number, item: InventoryItem): Promise<void> {
     const client = await getClient();
     try {
       await client.queryObject(
-        `INSERT INTO inventory (barcode, name, quantity, image) 
-         VALUES ($1, $2, $3, $4)`,
+        `INSERT INTO items (barcode, name, quantity, imageUrl, shelf_id) 
+         VALUES ($1, $2, $3, $4, $5)`,
         [
-          inventory.barcode,
-          inventory.name,
-          inventory.quantity,
-          inventory.image,
+          item.barcode,
+          item.name,
+          item.quantity,
+          item.imageUrl,
+          shelfId,
         ],
       );
     } finally {
@@ -41,7 +42,7 @@ export class InventoryController {
     const client = await getClient();
     try {
       const inventory = await client.queryObject<InventoryItem>(
-        "SELECT * FROM inventory WHERE barcode = $1",
+        "SELECT * FROM items WHERE barcode = $1",
         [barcode],
       );
       return inventory.rows[0] || null;

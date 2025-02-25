@@ -6,6 +6,7 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $closet from "./routes/closet.tsx";
 import * as $index from "./routes/index.tsx";
+import * as $BarcodeScanner from "./islands/BarcodeScanner.tsx";
 import * as $ClosetShelf from "./islands/ClosetShelf.tsx";
 import * as $InventoryModal from "./islands/InventoryModal.tsx";
 import type { Manifest } from "$fresh/server.ts";
@@ -18,6 +19,7 @@ const manifest = {
     "./routes/index.tsx": $index,
   },
   islands: {
+    "./islands/BarcodeScanner.tsx": $BarcodeScanner,
     "./islands/ClosetShelf.tsx": $ClosetShelf,
     "./islands/InventoryModal.tsx": $InventoryModal,
   },
