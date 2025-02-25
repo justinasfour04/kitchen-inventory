@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { InventoryItem } from "../components/InventoryGrid.tsx";
+import { InventoryItem } from "../controllers/inventory/inventory.types.ts";
 
 interface InventoryModalProps {
   items: InventoryItem[];
@@ -13,7 +13,7 @@ export default function InventoryModal({ items }: InventoryModalProps) {
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {items.map((item) => (
           <div
-            key={item.id}
+            key={item.barcode}
             onClick={() => setSelectedItem(item)}
             class="cursor-pointer bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 border border-gray-200"
           >
@@ -56,7 +56,7 @@ export default function InventoryModal({ items }: InventoryModalProps) {
             )}
             <div class="space-y-2">
               <p class="font-medium">Quantity: {selectedItem.quantity}</p>
-              <p class="text-gray-600">{selectedItem.description}</p>
+              <p class="text-gray-600">{selectedItem.name}</p>
             </div>
           </div>
         </div>

@@ -1,13 +1,6 @@
 import { JSX } from "preact";
 import InventoryModal from "../islands/InventoryModal.tsx";
-
-export interface InventoryItem {
-  id: string;
-  name: string;
-  quantity: number;
-  description: string;
-  imageUrl?: string;
-}
+import { InventoryItem } from "../controllers/inventory/inventory.types.ts";
 
 interface InventoryGridProps {
   items: InventoryItem[];

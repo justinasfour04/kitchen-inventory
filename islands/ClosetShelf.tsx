@@ -1,14 +1,9 @@
 import { useState } from "preact/hooks";
-import { InventoryGrid, InventoryItem } from "../components/InventoryGrid.tsx";
-
-interface ShelfData {
-  id: number;
-  name: string;
-  items: InventoryItem[];
-}
+import { InventoryGrid } from "../components/InventoryGrid.tsx";
+import { ShelfWithItems } from "../controllers/shelves/shelves.controller.ts";
 
 interface ClosetShelfProps {
-  shelves: ShelfData[];
+  shelves: ShelfWithItems[];
 }
 
 export default function ClosetShelf({ shelves }: ClosetShelfProps) {
