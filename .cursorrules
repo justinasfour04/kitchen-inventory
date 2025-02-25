@@ -1,0 +1,111 @@
+// Project: Deno Fresh with TypeScript and Tailwind CSS
+// This file provides instructions for AI code generation
+
+// General Development Guidelines
+- Use TypeScript for all new code
+- Follow Deno's style guide and best practices
+- Implement proper error handling and type safety
+- Write self-documenting code with clear naming
+- Keep components and functions focused and single-purpose
+- Use Deno formatter (deno fmt) and linter (deno lint)
+
+// Fresh Framework Specifics (Fresh v1.7.3)
+- Use Fresh's built-in routing system in /routes directory
+- Place components in /components directory
+- Place islands (interactive components) in /islands directory
+- Follow Fresh's conventions for API routes in /routes/api
+- Use proper Fresh middleware patterns when needed
+- Utilize Fresh's manifest generation for static assets
+- Follow Fresh's plugin system for extensions
+
+// TypeScript Guidelines
+- Use strict TypeScript configurations
+- Prefer type inference where possible
+- Define explicit return types for functions
+- Use interface over type when possible
+- Utilize Fresh's built-in types
+- Use JSX with Preact (jsxImportSource: "preact")
+- Leverage Preact Signals for state management
+
+// Tailwind CSS Guidelines (v3.4.1)
+- Use Tailwind utility classes for styling
+- Follow mobile-first responsive design
+- Group related Tailwind classes logically
+- Extract common patterns into components
+- Use @apply in CSS files sparingly
+- Follow project's custom Tailwind configuration
+- Ensure proper purging of unused styles in production
+
+// Code Structure
+- Keep files under 200 lines when possible
+- Use named exports over default exports
+- Organize imports in order:
+  1. Fresh imports ($fresh/*)
+  2. Preact imports
+  3. Standard library imports ($std/*)
+  4. Other external dependencies
+  5. Internal imports
+- Follow component structure:
+  1. Imports
+  2. Types/Interfaces
+  3. Component
+  4. Exports
+
+// Performance
+- Minimize client-side JavaScript
+- Use Fresh islands sparingly for interactive components
+- Implement proper lazy loading where needed
+- Follow Fresh's SSR patterns
+- Optimize static asset delivery
+- Use appropriate caching strategies
+- Implement proper PWA features when needed
+
+// Testing
+- Write unit tests for critical functionality
+- Use Deno's built-in testing framework
+- Mock external dependencies appropriately
+- Test both server and client-side code
+- Implement e2e tests for critical user flows
+
+// Security
+- Validate all user inputs
+- Sanitize data before rendering
+- Follow OWASP security guidelines
+- Use proper CORS policies in API routes
+- Implement CSP headers where necessary
+- Handle authentication and authorization properly
+- Protect against common web vulnerabilities
+
+// API Design
+- Use RESTful conventions
+- Implement proper error handling
+- Return consistent response structures
+- Use proper HTTP status codes
+- Document API endpoints
+- Implement rate limiting where necessary
+- Version APIs appropriately
+
+// Dependencies
+- Prefer Deno standard library modules ($std/*)
+- Use ESM imports with specific versions
+- Keep external dependencies minimal
+- Pin dependency versions in deno.json
+- Regular security audits of dependencies
+- Use official Fresh plugins when available
+
+// Documentation
+- Document complex logic and algorithms
+- Include JSDoc comments for public APIs
+- Keep README up to date
+- Document environment requirements
+- Maintain changelog for significant changes
+- Document build and deployment procedures
+- Include setup instructions for new developers
+
+// Development Workflow
+- Use provided npm scripts for common tasks
+- Follow the project's task conventions in deno.json
+- Use proper version control practices
+- Maintain clean commit history
+- Review code changes thoroughly
+- Follow semantic versioning for releases 
