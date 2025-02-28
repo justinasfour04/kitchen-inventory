@@ -32,5 +32,3 @@ jobs:
           project: "kitchen-inventory"
           entrypoint: "main.ts"
           root: "."
-          
-          

@@ -1,6 +1,9 @@
 import { getClient } from "../../db/index.ts";
 import { Shelf } from "./shelves.types.ts";
-import { DbInventoryItem, InventoryItem } from "../inventory/inventory.types.ts";
+import {
+  DbInventoryItem,
+  InventoryItem,
+} from "../inventory/inventory.types.ts";
 
 export interface ShelfWithItems extends Shelf {
   items: InventoryItem[];
@@ -14,7 +17,7 @@ export class ShelvesController {
     try {
       // First, get all shelves
       const shelvesResult = await client.queryObject<Shelf>(
-        'SELECT id, name FROM shelves ORDER BY created_at DESC',
+        "SELECT id, name FROM shelves ORDER BY created_at DESC",
       );
 
       const shelves = shelvesResult.rows;

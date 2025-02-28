@@ -19,7 +19,10 @@ export class InventoryController {
     }
   }
 
-  async addInventoryToShelf(shelfId: number, item: InventoryItem): Promise<void> {
+  async addInventoryToShelf(
+    shelfId: number,
+    item: InventoryItem,
+  ): Promise<void> {
     const client = await getClient();
     try {
       await client.queryObject(

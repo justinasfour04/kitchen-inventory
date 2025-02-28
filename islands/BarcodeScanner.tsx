@@ -22,9 +22,9 @@ export default function BarcodeScanner(
   // Function to play a beep sound using Web Audio API
   const playBeepSound = () => {
     try {
-      const audioContext =
-        new (globalThis.window.AudioContext ||
-          (globalThis.window as unknown as { webkitAudioContext: AudioContext }).webkitAudioContext)();
+      const audioContext = new (globalThis.window.AudioContext ||
+        (globalThis.window as unknown as { webkitAudioContext: AudioContext })
+          .webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
 
