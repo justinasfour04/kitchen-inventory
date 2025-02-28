@@ -24,7 +24,7 @@ export default function BarcodeScanner(
     try {
       const audioContext =
         new (globalThis.window.AudioContext ||
-          (globalThis.window as any).webkitAudioContext)();
+          (globalThis.window as unknown as { webkitAudioContext: AudioContext }).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
 
@@ -60,9 +60,6 @@ export default function BarcodeScanner(
       BarcodeFormat.EAN_8,
       BarcodeFormat.UPC_A,
       BarcodeFormat.UPC_E,
-      BarcodeFormat.CODE_39,
-      BarcodeFormat.CODE_128,
-      BarcodeFormat.QR_CODE,
     ]);
 
     const codeReader = new BrowserMultiFormatReader(hints);
@@ -98,7 +95,7 @@ export default function BarcodeScanner(
     ).catch((err: Error) => {
       console.error("Error starting barcode scanner:", err);
       setError(
-        "Could not access camera. Please ensure you've granted camera permissions.",
+        `Could not access camera. Please ensure you've granted camera permissions. ${err.message}`,
       );
     });
 
