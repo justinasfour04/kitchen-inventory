@@ -1,4 +1,4 @@
-import { getClient } from "../../db/config.ts";
+import { getClient } from "../../db/index.ts";
 import { Shelf } from "./shelves.types.ts";
 import { DbInventoryItem, InventoryItem } from "../inventory/inventory.types.ts";
 

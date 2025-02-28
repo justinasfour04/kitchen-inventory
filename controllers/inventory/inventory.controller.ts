@@ -1,5 +1,5 @@
 import { InventoryItem } from "../inventory/inventory.types.ts";
-import { getClient } from "../../db/config.ts";
+import { getClient } from "../../db/index.ts";
 
 export class InventoryController {
   constructor() {}

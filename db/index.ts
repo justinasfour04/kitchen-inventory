@@ -17,17 +17,3 @@ export async function getClient() {
   const client = await pool.connect();
   return client;
 }
-
-// Helper function to execute a query
-export async function executeQuery<T>(
-  query: string,
-  params?: unknown[],
-): Promise<T[]> {
-  const client = await getClient();
-  try {
-    const result = await client.queryObject<T>(query, params);
-    return result.rows;
-  } finally {
-    client.release();
-  }
-}
