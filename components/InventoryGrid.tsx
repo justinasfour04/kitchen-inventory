@@ -1,6 +1,6 @@
 import { JSX } from "preact";
 import InventoryModal from "../islands/InventoryModal.tsx";
-import { InventoryItem } from "../controllers/inventory/inventory.types.ts";
+import { InventoryItem } from "../controllers/inventory/inventory.controller.ts";
 
 interface InventoryGridProps {
   items: InventoryItem[];

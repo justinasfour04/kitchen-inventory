@@ -1,73 +1,68 @@
 import { getClient } from "../../db/index.ts";
-import { Shelf } from "./shelves.types.ts";
-import {
-  DbInventoryItem,
-  InventoryItem,
-} from "../inventory/inventory.types.ts";
+import { Tables } from "../../db/types.ts";
 
-export interface ShelfWithItems extends Shelf {
-  items: InventoryItem[];
-}
+
+type Shelf = Omit<Tables<"shelves">, "created_at" | "updated_at">
+export type ShelfWithItems = Shelf & {
+  items: Omit<Tables<"items">, "id" | "created_at" | "updated_at">[];
+};
 
 export class ShelvesController {
   constructor() {}
 
   async getShelves(): Promise<ShelfWithItems[]> {
-    const client = await getClient();
-    try {
-      // First, get all shelves
-      const shelvesResult = await client.queryObject<Shelf>(
-        "SELECT id, name FROM shelves ORDER BY created_at DESC",
-      );
+    const client = getClient();
+    // First, get all shelves
+    const {
+      data: shelves,
+    } = await client.from("shelves").select("id, name").order("created_at", {
+      ascending: false,
+    });
 
-      const shelves = shelvesResult.rows;
-
+    if (shelves) {
       // For each shelf, get its items
       const shelvesWithItems: ShelfWithItems[] = await Promise.all(
         shelves.map(async (shelf) => {
-          const itemsResult = await client.queryObject<DbInventoryItem>(
-            `SELECT barcode, name, quantity, image, unit FROM items WHERE shelf_id = $1`,
-            [shelf.id],
-          );
+          const {
+            data: items,
+          } = await client.from("items").select(
+            "barcode, category_id, expiration_date, image, minimum_quantity, name, quantity, shelf_id, unit",
+          ).eq("shelf_id", shelf.id).order("created_at", { ascending: false });
 
-          // Convert database items to InventoryItem format
-          const items: InventoryItem[] = itemsResult?.rows.map((item) => ({
-            id: item.id.toString(),
-            barcode: item.barcode,
-            expirationDate: item.expirationDate,
-            imageUrl: item.imageUrl || "",
-            minimumQuantity: item.minimumQuantity,
-            name: item.name,
-            notes: item.notes,
-            quantity: item.quantity,
-            unit: item.unit,
-          })) || [];
+          if (items) {
+            // Convert database items to InventoryItem format
+            return {
+              ...shelf,
+              items,
+            };
+          }
 
           return {
             ...shelf,
-            items,
+            items: [],
           };
         }),
       );
 
       return shelvesWithItems;
-    } finally {
-      client.release();
     }
+
+    return [];
   }
 
   async addShelf(
-    shelf: Omit<Shelf, "id" | "createdAt" | "updatedAt">,
+    nameOfShelf: string,
   ): Promise<Shelf> {
-    const client = await getClient();
-    try {
-      const result = await client.queryObject<Shelf>(
-        'INSERT INTO shelves (name) VALUES ($1) RETURNING id, name, created_at as "createdAt", updated_at as "updatedAt"',
-        [shelf.name],
-      );
-      return result.rows[0];
-    } finally {
-      client.release();
+    const client = getClient();
+    const {
+      data: newShelf,
+    } = await client.from('shelves').insert({
+      name: nameOfShelf,
+    }).select('id, name').single();
+
+    if (!newShelf) {
+      throw new Error('Failed to add shelf');
     }
+    return newShelf;
   }
 }

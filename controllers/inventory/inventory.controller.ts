@@ -1,56 +1,50 @@
-import { InventoryItem } from "../inventory/inventory.types.ts";
 import { getClient } from "../../db/index.ts";
+import { Tables } from "../../db/types.ts";
+
+export type InventoryItem = Omit<Tables<'items'>, 'id' | 'created_at' | 'updated_at'>;
 
 export class InventoryController {
   constructor() {}
 
-  async getInventory(): Promise<Record<string, InventoryItem>> {
-    const client = await getClient();
-    try {
-      const inventory = await client.queryObject<InventoryItem>(
-        "SELECT * FROM inventory",
-      );
-      return inventory.rows.reduce((groupedByBarcode, inventory) => {
-        groupedByBarcode[inventory.barcode] = inventory;
+  async getInventory(): Promise<Record<string, InventoryItem> | null> {
+    const client = getClient();
+    const {
+      data: items,
+    } = await client.from('items').select('*');
+
+    if (items) {
+      return items.reduce((groupedByBarcode, item) => {
+        groupedByBarcode[item.barcode] = item;
         return groupedByBarcode;
       }, {} as Record<string, InventoryItem>);
-    } finally {
-      client.release();
     }
+
+    return null;
   }
 
   async addInventoryToShelf(
     shelfId: number,
+    categoryId: number,
     item: InventoryItem,
   ): Promise<void> {
-    const client = await getClient();
-    try {
-      await client.queryObject(
-        `INSERT INTO items (barcode, name, quantity, imageUrl, shelf_id) 
-         VALUES ($1, $2, $3, $4, $5)`,
-        [
-          item.barcode,
-          item.name,
-          item.quantity,
-          item.imageUrl,
-          shelfId,
-        ],
-      );
-    } finally {
-      client.release();
-    }
+    const client = getClient();
+    await client.from('items').insert({
+      barcode: item.barcode,
+      name: item.name,
+      quantity: item.quantity,
+      image: item.image,
+      shelf_id: shelfId,
+      expiration_date: item.expiration_date,
+      unit: item.unit,
+      category_id: categoryId,
+    });
   }
 
   async searchByBarcode(barcode: string): Promise<InventoryItem | null> {
-    const client = await getClient();
-    try {
-      const inventory = await client.queryObject<InventoryItem>(
-        "SELECT * FROM items WHERE barcode = $1",
-        [barcode],
-      );
-      return inventory.rows[0] || null;
-    } finally {
-      client.release();
-    }
+    const client = getClient();
+    const {
+      data: foundItem,
+    } = await client.from('items').select('*').eq('barcode', barcode).single();
+    return foundItem;
   }
 }

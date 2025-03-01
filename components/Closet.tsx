@@ -3,8 +3,7 @@ import {
   ShelfWithItems,
   ShelvesController,
 } from "../controllers/shelves/shelves.controller.ts";
-import { InventoryController } from "../controllers/inventory/inventory.controller.ts";
-import { InventoryItem } from "../controllers/inventory/inventory.types.ts";
+import { InventoryController, type InventoryItem } from "../controllers/inventory/inventory.controller.ts";
 import ClosetShelf from "../islands/ClosetShelf.tsx";
 
 export const handler: Handlers<ShelfWithItems[]> = {
@@ -31,29 +30,30 @@ export const handler: Handlers<ShelfWithItems[]> = {
     const expirationDate = formData.get("expirationDate")?.toString() || "";
 
     if (action === "addShelf" && name) {
-      await shelvesController.addShelf({ name });
+      await shelvesController.addShelf(name);
     } else if (action === "addItem" && barcode && shelfId) {
       // Search for item by barcode
       const item = await inventoryController.searchByBarcode(barcode);
 
       if (item) {
         // Add existing item to the selected shelf
-        await inventoryController.addInventoryToShelf(Number(shelfId), item);
+        await inventoryController.addInventoryToShelf(parseInt(shelfId, 10), 1, item);
       } else if (itemName) {
         // Create a new item if name is provided
         const newItem: InventoryItem = {
           barcode,
           name: itemName,
-          quantity: Number(quantity),
-          imageUrl: "",
+          quantity: parseInt(quantity, 10),
+          image: "",
           unit,
-          expirationDate: new Date(expirationDate),
-          minimumQuantity: 0,
-          notes: "",
+          expiration_date: new Date(expirationDate).toISOString(),
+          minimum_quantity: 0,
+          category_id: 1,
+          shelf_id: parseInt(shelfId, 10),
         };
 
         // Add the new item to the selected shelf
-        await inventoryController.addInventoryToShelf(Number(shelfId), newItem);
+        await inventoryController.addInventoryToShelf(parseInt(shelfId, 10), 1, newItem);
       } else {
         // If item not found and no name provided, log an error
         console.log(

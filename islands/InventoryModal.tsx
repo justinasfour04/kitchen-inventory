@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { InventoryItem } from "../controllers/inventory/inventory.types.ts";
+import { type InventoryItem } from "../controllers/inventory/inventory.controller.ts";
 
 interface InventoryModalProps {
   items: InventoryItem[];
@@ -18,10 +18,10 @@ export default function InventoryModal({ items }: InventoryModalProps) {
             class="cursor-pointer bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 border border-gray-200"
           >
             <div class="aspect-square w-full bg-gray-100 rounded-md mb-2 flex items-center justify-center">
-              {item.imageUrl
+              {item.image
                 ? (
                   <img
-                    src={item.imageUrl}
+                    src={item.image}
                     alt={item.name}
                     class="object-cover w-full h-full rounded-md"
                   />
@@ -47,9 +47,9 @@ export default function InventoryModal({ items }: InventoryModalProps) {
                 ✕
               </button>
             </div>
-            {selectedItem.imageUrl && (
+            {selectedItem.image && (
               <img
-                src={selectedItem.imageUrl}
+                src={selectedItem.image}
                 alt={selectedItem.name}
                 class="w-full h-48 object-cover rounded-lg mb-4"
               />

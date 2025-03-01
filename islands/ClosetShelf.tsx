@@ -12,7 +12,7 @@ export default function ClosetShelf({ shelves }: ClosetShelfProps) {
   const [view, setView] = useState<"options" | "items">("options");
   const [barcodeInput, setBarcodeInput] = useState("");
   const [showNewItemForm, setShowNewItemForm] = useState(false);
-  const [searchStatus, setSearchStatus] = useState<
+  const [_searchStatus, setSearchStatus] = useState<
     "idle" | "not_found" | "found"
   >("idle");
   const [showScanner, setShowScanner] = useState(false);

@@ -1,18 +1,12 @@
-import { Pool } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
+import { createClient } from "@supabase/supabase-js";
+import { Database } from "./types.ts";
 
-// Helper function to get a client from the pool
-export async function getClient() {
-  const pool = new Pool(
-    {
-      user: Deno.env.get("POSTGRES_USER"),
-      password: Deno.env.get("POSTGRES_PASSWORD"),
-      database: Deno.env.get("POSTGRES_DB"),
-      hostname: Deno.env.get("POSTGRES_HOST"),
-      port: Deno.env.get("POSTGRES_PORT"),
-    },
-    3,
-    true,
-  );
-  const client = await pool.connect();
-  return client;
+export function getClient() {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseKey = Deno.env.get("SUPABASE_API_KEY");
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("The Supabase URL and/or API key are not set in env");
+  }
+  const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+  return supabase;
 }
