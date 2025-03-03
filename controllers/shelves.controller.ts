@@ -1,8 +1,7 @@
-import { getClient } from "../../db/index.ts";
-import { Tables } from "../../db/types.ts";
+import { getClient } from "@/db/index.ts";
+import { Tables } from "@/db/types.ts";
 
-
-type Shelf = Omit<Tables<"shelves">, "created_at" | "updated_at">
+type Shelf = Omit<Tables<"shelves">, "created_at" | "updated_at">;
 export type ShelfWithItems = Shelf & {
   items: Omit<Tables<"items">, "id" | "created_at" | "updated_at">[];
 };
@@ -56,12 +55,12 @@ export class ShelvesController {
     const client = getClient();
     const {
       data: newShelf,
-    } = await client.from('shelves').insert({
+    } = await client.from("shelves").insert({
       name: nameOfShelf,
-    }).select('id, name').single();
+    }).select("id, name").single();
 
     if (!newShelf) {
-      throw new Error('Failed to add shelf');
+      throw new Error("Failed to add shelf");
     }
     return newShelf;
   }

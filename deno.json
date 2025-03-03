@@ -10,6 +10,7 @@
     "update": "deno run -A -r https://fresh.deno.dev/update .",
     "migrate": "deno run -A scripts/migrate.ts"
   },
+  "license": "UNLICENSED",
   "lint": {
     "rules": {
       "tags": [
@@ -25,16 +26,24 @@
     "**/_fresh/*"
   ],
   "imports": {
+    "@/": "./",
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
+    "@radix-ui/react-popover": "npm:@radix-ui/react-popover@^1.1.6",
+    "@radix-ui/react-slot": "npm:@radix-ui/react-slot@^1.1.2",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.3",
     "@supabase/supabase-js": "jsr:@supabase/supabase-js@^2.49.1",
+    "class-variance-authority": "npm:class-variance-authority@^0.7.1",
+    "clsx": "npm:clsx@^2.1.1",
+    "date-fns": "npm:date-fns@^4.1.0",
+    "lucide-react": "npm:lucide-react@^0.477.0",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
+    "react-day-picker": "npm:react-day-picker@8.10.1",
+    "tailwind-merge": "npm:tailwind-merge@^3.0.2",
     "tailwindcss": "npm:tailwindcss@3.4.1",
-    "tailwindcss/": "npm:/tailwindcss@3.4.1/",
-    "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
+    "tailwindcss-animate": "npm:tailwindcss-animate@^1.0.7",
     "@zxing/library": "https://esm.sh/@zxing/library@0.20.0"
   },
   "compilerOptions": {

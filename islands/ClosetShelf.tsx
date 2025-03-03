@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
-import { InventoryGrid } from "../components/InventoryGrid.tsx";
-import { ShelfWithItems } from "../controllers/shelves/shelves.controller.ts";
-import BarcodeScanner from "./BarcodeScanner.tsx";
+import { InventoryGrid } from "@/components/InventoryGrid.tsx";
+import { ShelfWithItems } from "@/controllers/shelves.controller.ts";
+import BarcodeScanner from "@/islands/BarcodeScanner.tsx";
 
 interface ClosetShelfProps {
   shelves: ShelfWithItems[];

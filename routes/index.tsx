@@ -28,10 +28,10 @@ export default function Home() {
             View and manage all your kitchen inventory items
           </p>
           <a
-            href="#"
+            href="/inventory"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
           >
-            Coming Soon
+            View Inventory
           </a>
         </div>
       </div>

@@ -2,9 +2,12 @@ import { Handlers } from "$fresh/server.ts";
 import {
   ShelfWithItems,
   ShelvesController,
-} from "../controllers/shelves/shelves.controller.ts";
-import { InventoryController, type InventoryItem } from "../controllers/inventory/inventory.controller.ts";
-import ClosetShelf from "../islands/ClosetShelf.tsx";
+} from "@/controllers/shelves.controller.ts";
+import {
+  InventoryController,
+  type InventoryItem,
+} from "@/controllers/inventory.controller.ts";
+import ClosetShelf from "@/islands/ClosetShelf.tsx";
 
 export const handler: Handlers<ShelfWithItems[]> = {
   async GET(_req, ctx) {
@@ -37,7 +40,11 @@ export const handler: Handlers<ShelfWithItems[]> = {
 
       if (item) {
         // Add existing item to the selected shelf
-        await inventoryController.addInventoryToShelf(parseInt(shelfId, 10), 1, item);
+        await inventoryController.addInventoryToShelf(
+          parseInt(shelfId, 10),
+          1,
+          item,
+        );
       } else if (itemName) {
         // Create a new item if name is provided
         const newItem: InventoryItem = {
@@ -53,7 +60,15 @@ export const handler: Handlers<ShelfWithItems[]> = {
         };
 
         // Add the new item to the selected shelf
-        await inventoryController.addInventoryToShelf(parseInt(shelfId, 10), 1, newItem);
+        try {
+          await inventoryController.addInventoryToShelf(
+            parseInt(shelfId, 10),
+            1,
+            newItem,
+          );
+        } catch (error) {
+          console.error(error);
+        }
       } else {
         // If item not found and no name provided, log an error
         console.log(

@@ -1,7 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
-import Closet, { handler as closetHandler } from "../components/Closet.tsx";
-import { ShelfWithItems } from "../controllers/shelves/shelves.controller.ts";
-import Layout from "../components/Layout.tsx";
+import Closet, { handler as closetHandler } from "@/components/Closet.tsx";
+import { ShelfWithItems } from "@/controllers/shelves.controller.ts";
+import Layout from "@/components/Layout.tsx";
 
 // Re-export the handler from the Closet component
 export const handler: Handlers<ShelfWithItems[]> = closetHandler;

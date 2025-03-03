@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { type InventoryItem } from "../controllers/inventory/inventory.controller.ts";
+import { type InventoryItem } from "@/controllers/inventory.controller.ts";
 
 interface InventoryModalProps {
   items: InventoryItem[];
