@@ -12,3 +12,5 @@ node_modules/
 
 # Supabase
 supabase/.temp
+
+.DS_Store
