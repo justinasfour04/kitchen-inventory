@@ -1,11 +1,22 @@
 import { JSX } from "preact";
 import { Head } from "$fresh/runtime.ts";
-
+import { HamburgerMenu } from "../islands/HamburgerMenu.tsx";
+import { Title } from "@/components/ui/Title.tsx";
 interface LayoutProps {
   children: JSX.Element | JSX.Element[];
   title?: string;
 }
 
+const navItems = [
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "Closet",
+    href: "/closet",
+  },
+];
 export default function Layout(
   { children, title = "Kitchen Inventory" }: LayoutProps,
 ) {
@@ -18,27 +29,10 @@ export default function Layout(
         {/* Navigation */}
         <nav class="bg-white shadow-md">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-              <div class="flex">
-                <div class="flex-shrink-0 flex items-center">
-                  <span class="text-xl font-bold text-blue-600">
-                    Kitchen Inventory
-                  </span>
-                </div>
-                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                  <a
-                    href="/"
-                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    Home
-                  </a>
-                  <a
-                    href="/closet"
-                    class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    Closet
-                  </a>
-                </div>
+            <div class="w-full h-16">
+              <div class="w-full h-full flex items-center justify-between">
+                <Title title="Kitchen Inventory" className="h-full flex items-center"/>
+                <HamburgerMenu items={navItems} color="#000000" className="h-full flex items-center"/>
               </div>
             </div>
           </div>
