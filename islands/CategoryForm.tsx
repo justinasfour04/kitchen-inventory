@@ -2,7 +2,7 @@
 import { useState } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 
-interface CategoryFormProps { 
+interface CategoryFormProps {
   onSuccess?: () => void;
 }
 

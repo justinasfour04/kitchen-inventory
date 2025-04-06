@@ -4,16 +4,14 @@ import {
   Category,
   CategoryController,
 } from "@/controllers/category.controller.ts";
-import {
-  InventoryItem,
-} from "@/controllers/inventory.controller.ts";
+import { InventoryItem } from "@/controllers/inventory.controller.ts";
 import CategoryForm from "@/islands/CategoryForm.tsx";
 import DeleteCategoryButton from "@/islands/DeleteCategoryButton.tsx";
 
 export type InventoryData = {
   inventory: Record<string, InventoryItem>;
   categories: Category[];
-}
+};
 
 export default function Inventory(
   { data }: { data: InventoryData },
@@ -101,9 +99,11 @@ export default function Inventory(
             </div>
           </div>
 
-          <CategoryForm onSuccess={() => {
-            setIsCategoryAdded(true);
-          }}/>
+          <CategoryForm
+            onSuccess={() => {
+              setIsCategoryAdded(true);
+            }}
+          />
         </div>
       </div>
     </div>

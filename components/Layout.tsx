@@ -35,8 +35,17 @@ export default function Layout(
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="w-full h-16">
               <div class="w-full h-full flex items-center justify-between">
-                <Title title="Kitchen Inventory" className="h-full flex items-center"/>
-                <HamburgerMenu items={navItems} color="#000000" className="h-full flex items-center"/>
+                <a href="/">
+                  <Title
+                    title="Kitchen Inventory"
+                    className="h-full flex items-center"
+                  />
+                </a>
+                <HamburgerMenu
+                  items={navItems}
+                  color="#000000"
+                  className="h-full flex items-center"
+                />
               </div>
             </div>
           </div>
