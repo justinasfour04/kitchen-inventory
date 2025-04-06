@@ -1,40 +1,43 @@
-import { Handlers } from "$fresh/server.ts";
+import { useEffect, useState } from "preact/hooks";
+
 import {
   Category,
   CategoryController,
 } from "@/controllers/category.controller.ts";
 import {
-  InventoryController,
   InventoryItem,
 } from "@/controllers/inventory.controller.ts";
 import CategoryForm from "@/islands/CategoryForm.tsx";
 import DeleteCategoryButton from "@/islands/DeleteCategoryButton.tsx";
 
-interface InventoryData {
+export type InventoryData = {
   inventory: Record<string, InventoryItem>;
   categories: Category[];
 }
 
-export const handler: Handlers<InventoryData> = {
-  async GET(_req, ctx) {
-    const inventoryController = new InventoryController();
-    const categoryController = new CategoryController();
-
-    const [inventory, categories] = await Promise.all([
-      inventoryController.getInventory(),
-      categoryController.getCategories(),
-    ]);
-
-    return ctx.render({
-      inventory: inventory ?? {},
-      categories: categories ?? [],
-    });
-  },
-};
-
 export default function Inventory(
   { data }: { data: InventoryData },
 ) {
+  const [isCategoryAdded, setIsCategoryAdded] = useState(false);
+  const [isCategoryDeleted, setIsCategoryDeleted] = useState(false);
+  const [categories, setCategories] = useState<Category[]>(data.categories);
+
+  useEffect(() => {
+    void (async () => {
+      if (isCategoryAdded) {
+        setIsCategoryAdded(false);
+      }
+
+      if (isCategoryDeleted) {
+        setIsCategoryDeleted(false);
+      }
+
+      const response = await fetch("/api/categories");
+      const categories = await response.json();
+      setCategories(categories);
+    })();
+  }, [isCategoryAdded, isCategoryDeleted]);
+
   return (
     <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-8">
@@ -75,10 +78,10 @@ export default function Inventory(
               <h2 class="text-xl font-semibold text-gray-700 mb-4">
                 Categories
               </h2>
-              {data.categories && data.categories.length > 0
+              {categories && categories.length > 0
                 ? (
                   <ul class="space-y-2">
-                    {data.categories.map((category) => (
+                    {categories.map((category) => (
                       <li
                         key={category.id}
                         class="px-3 py-2 bg-gray-50 rounded-md flex justify-between items-center"
@@ -86,9 +89,8 @@ export default function Inventory(
                         <span>{category.name}</span>
                         <DeleteCategoryButton
                           categoryId={category.id}
-                          onSuccess={async () => {
-                            await fetch("/inventory");
-                            globalThis.location.reload();
+                          onSuccess={() => {
+                            setIsCategoryDeleted(true);
                           }}
                         />
                       </li>
@@ -99,9 +101,8 @@ export default function Inventory(
             </div>
           </div>
 
-          <CategoryForm onSuccess={async () => {
-            await fetch("/inventory");
-            globalThis.location.reload();
+          <CategoryForm onSuccess={() => {
+            setIsCategoryAdded(true);
           }}/>
         </div>
       </div>

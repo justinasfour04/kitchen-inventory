@@ -4,7 +4,7 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 
 interface DeleteCategoryButtonProps {
   categoryId: number;
-  onSuccess?: () => Promise<void>;
+  onSuccess?: () => void;
 }
 
 export default function DeleteCategoryButton(
@@ -31,7 +31,7 @@ export default function DeleteCategoryButton(
       setShowConfirmation(false);
 
       if (onSuccess) {
-        await onSuccess();
+        onSuccess();
       }
     } catch (err) {
       setError(

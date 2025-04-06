@@ -3,7 +3,7 @@ import { useState } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 
 interface CategoryFormProps { 
-  onSuccess?: () => Promise<void>;
+  onSuccess?: () => void;
 }
 
 export default function CategoryForm({ onSuccess }: CategoryFormProps) {
@@ -39,10 +39,10 @@ export default function CategoryForm({ onSuccess }: CategoryFormProps) {
 
       setCategoryName("");
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      setTimeout(() => setSuccess(false), 1000);
 
       if (onSuccess) {
-        await onSuccess();
+        onSuccess();
       }
     } catch (err) {
       setError(

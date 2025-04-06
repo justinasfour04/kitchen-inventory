@@ -1,15 +1,25 @@
-import Inventory, { handler as inventoryHandler } from "../islands/Inventory.tsx";
+import Inventory, { InventoryData } from "../islands/Inventory.tsx";
 import Layout from "@/components/Layout.tsx";
-import { Category } from "@/controllers/category.controller.ts";
-import { InventoryItem } from "@/controllers/inventory.controller.ts";
+import { CategoryController } from "@/controllers/category.controller.ts";
+import { InventoryController } from "@/controllers/inventory.controller.ts";
 import { Handlers } from "$fresh/server.ts";
 
-interface InventoryData {
-  inventory: Record<string, InventoryItem>;
-  categories: Category[];
-}
+export const handler: Handlers<InventoryData> = {
+  async GET(_req, ctx) {
+    const inventoryController = new InventoryController();
+    const categoryController = new CategoryController();
 
-export const handler: Handlers<InventoryData> = inventoryHandler;
+    const [inventory, categories] = await Promise.all([
+      inventoryController.getInventory(),
+      categoryController.getCategories(),
+    ]);
+
+    return ctx.render({
+      inventory: inventory ?? {},
+      categories: categories ?? [],
+    });
+  },
+};
 
 export default function InventoryRoute(
   props: { data: InventoryData },
