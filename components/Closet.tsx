@@ -27,7 +27,7 @@ export const handler: Handlers<{ shelves: ShelfWithItems[]; categories: Category
     // Handle form data submission
     const formData = await req.formData();
     const name = formData.get("name")?.toString();
-    const categoryName = formData.get("category")?.toString();
+    const categoryId = formData.get("category")?.toString();
     const barcode = formData.get("barcode")?.toString();
     const shelfId = formData.get("shelfId")?.toString();
     const action = formData.get("action")?.toString();
@@ -40,17 +40,15 @@ export const handler: Handlers<{ shelves: ShelfWithItems[]; categories: Category
 
     if (action === "addShelf" && name) {
       await shelvesController.addShelf(name);
-    } else if (action === "addItem" && barcode && shelfId && categoryName) {
+    } else if (action === "addItem" && barcode && shelfId && categoryId) {
       // Search for item by barcode
       const item = await inventoryController.searchByBarcode(barcode);
-      const category = await categoriesController.getCategoryByName(categoryName);
-      const categoryId = category?.id ?? -1;
 
       if (item) {
         // Add existing item to the selected shelf
         await inventoryController.addInventoryToShelf(
           parseInt(shelfId, 10),
-          categoryId,
+          parseInt(categoryId, 10),
           item,
         );
       } else if (itemName) {
@@ -63,7 +61,7 @@ export const handler: Handlers<{ shelves: ShelfWithItems[]; categories: Category
           unit,
           expiration_date: new Date(expirationDate).toISOString(),
           minimum_quantity: 0,
-          category_id: categoryId,
+          category_id: parseInt(categoryId, 10),
           shelf_id: parseInt(shelfId, 10),
         };
 
@@ -71,7 +69,7 @@ export const handler: Handlers<{ shelves: ShelfWithItems[]; categories: Category
         try {
           await inventoryController.addInventoryToShelf(
             parseInt(shelfId, 10),
-            categoryId,
+            parseInt(categoryId, 10),
             newItem,
           );
         } catch (error) {

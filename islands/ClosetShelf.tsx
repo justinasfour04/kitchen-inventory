@@ -3,7 +3,7 @@ import { InventoryGrid } from "@/components/InventoryGrid.tsx";
 import { ShelfWithItems } from "@/controllers/shelves.controller.ts";
 import BarcodeScanner from "@/islands/BarcodeScanner.tsx";
 import { Category } from "@/controllers/category.controller.ts";
-
+import { InventoryItemWithCategoryAndShelf } from "@/lib/types.ts";
 interface ClosetShelfProps {
   shelves: ShelfWithItems[];
   categories: Category[];
@@ -61,6 +61,15 @@ export default function ClosetShelf({ shelves, categories }: ClosetShelfProps) {
   };
 
   const selectedShelfData = shelves.find((s) => s.id === selectedShelf);
+  const selectedShelfDataItems = selectedShelfData?.items.map((item) => ({
+    ...item,
+    category: categories.find((c) => c.id === item.category_id),
+    shelf: shelves.find((s) => s.id === item.shelf_id),
+  })) as InventoryItemWithCategoryAndShelf[];
+  const selectedShelfWithFilledInfo = {
+    ...selectedShelfData,
+    items: selectedShelfDataItems,
+  }
 
   return (
     <div>
@@ -86,22 +95,22 @@ export default function ClosetShelf({ shelves, categories }: ClosetShelfProps) {
       </div>
 
       {/* Selected shelf actions and content */}
-      {selectedShelf && selectedShelfData && (
+      {selectedShelf && selectedShelfWithFilledInfo && selectedShelfWithFilledInfo.items && (
         <div class="mt-6 bg-white rounded-lg shadow-lg p-6 border-2 border-gray-200">
-          <h3 class="text-xl font-semibold mb-4">{selectedShelfData.name}</h3>
+          <h3 class="text-xl font-semibold mb-4">{selectedShelfWithFilledInfo.name}</h3>
 
           {view === "options"
             ? (
               <div class="flex flex-col gap-4">
                 <div class="flex justify-between items-center">
                   <span class="text-gray-700">
-                    {selectedShelfData.items.length} items in this shelf
+                    {selectedShelfWithFilledInfo.items.length} items in this shelf
                   </span>
                   <div class="flex gap-2">
                     <button
                       onClick={() => setView("items")}
                       class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      disabled={selectedShelfData.items.length === 0}
+                      disabled={selectedShelfWithFilledInfo.items.length === 0}
                     >
                       View Items
                     </button>
@@ -111,7 +120,7 @@ export default function ClosetShelf({ shelves, categories }: ClosetShelfProps) {
                 {/* Add item section */}
                 <div class="mt-4 pt-4 border-t border-gray-200">
                   <h4 class="text-lg font-medium mb-3">
-                    Add Item to {selectedShelfData.name}
+                    Add Item to {selectedShelfWithFilledInfo.name}
                   </h4>
 
                   {/* Barcode search form */}
@@ -342,7 +351,7 @@ export default function ClosetShelf({ shelves, categories }: ClosetShelfProps) {
                     ← Back to Options
                   </button>
                 </div>
-                <InventoryGrid items={selectedShelfData.items} />
+                <InventoryGrid items={selectedShelfWithFilledInfo.items} />
               </div>
             )}
         </div>

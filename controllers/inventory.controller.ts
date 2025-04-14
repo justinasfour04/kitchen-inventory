@@ -33,12 +33,9 @@ export class InventoryController {
     const client = getClient();
 
     const {
-      data: isCategoryFound,
-    } = await client.from("categories").select("id").contains(
-      "id",
-      categoryId.toString(10),
-    ).single();
-    if (!isCategoryFound) {
+      data: category,
+    } = await client.from("categories").select("id").eq("id", categoryId).single();
+    if (category?.id !== categoryId) {
       throw new Error("Category not found");
     }
 
