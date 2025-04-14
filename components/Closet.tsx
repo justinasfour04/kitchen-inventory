@@ -8,20 +8,26 @@ import {
   type InventoryItem,
 } from "@/controllers/inventory.controller.ts";
 import ClosetShelf from "@/islands/ClosetShelf.tsx";
+import { CategoryController, Category } from "@/controllers/category.controller.ts";
 
-export const handler: Handlers<ShelfWithItems[]> = {
+export const handler: Handlers<{ shelves: ShelfWithItems[]; categories: Category[] }> = {
   async GET(_req, ctx) {
     const shelvesController = new ShelvesController();
+    const categoriesController = new CategoryController();
     const shelves = await shelvesController.getShelves();
-    return ctx.render(shelves);
+    const categories = await categoriesController.getCategories();
+    const data = { shelves, categories };
+    return ctx.render(data);
   },
   async POST(req, ctx) {
     const shelvesController = new ShelvesController();
     const inventoryController = new InventoryController();
+    const categoriesController = new CategoryController();
 
     // Handle form data submission
     const formData = await req.formData();
     const name = formData.get("name")?.toString();
+    const categoryName = formData.get("category")?.toString();
     const barcode = formData.get("barcode")?.toString();
     const shelfId = formData.get("shelfId")?.toString();
     const action = formData.get("action")?.toString();
@@ -34,15 +40,17 @@ export const handler: Handlers<ShelfWithItems[]> = {
 
     if (action === "addShelf" && name) {
       await shelvesController.addShelf(name);
-    } else if (action === "addItem" && barcode && shelfId) {
+    } else if (action === "addItem" && barcode && shelfId && categoryName) {
       // Search for item by barcode
       const item = await inventoryController.searchByBarcode(barcode);
+      const category = await categoriesController.getCategoryByName(categoryName);
+      const categoryId = category?.id ?? -1;
 
       if (item) {
         // Add existing item to the selected shelf
         await inventoryController.addInventoryToShelf(
           parseInt(shelfId, 10),
-          1,
+          categoryId,
           item,
         );
       } else if (itemName) {
@@ -55,7 +63,7 @@ export const handler: Handlers<ShelfWithItems[]> = {
           unit,
           expiration_date: new Date(expirationDate).toISOString(),
           minimum_quantity: 0,
-          category_id: 1,
+          category_id: categoryId,
           shelf_id: parseInt(shelfId, 10),
         };
 
@@ -63,7 +71,7 @@ export const handler: Handlers<ShelfWithItems[]> = {
         try {
           await inventoryController.addInventoryToShelf(
             parseInt(shelfId, 10),
-            1,
+            categoryId,
             newItem,
           );
         } catch (error) {
@@ -78,13 +86,16 @@ export const handler: Handlers<ShelfWithItems[]> = {
     }
 
     const shelves = await shelvesController.getShelves();
-    return ctx.render(shelves);
+    const categories = await categoriesController.getCategories();
+    const data = { shelves, categories };
+    return ctx.render(data);
   },
 };
 
-export default function Closet({ data }: { data: ShelfWithItems[] }) {
+export default function Closet({ data }: { data: { shelves: ShelfWithItems[]; categories: Category[] } }) {
   // Use data from the handler if available, otherwise use sample data
-  const shelves = data?.length ? data : [];
+  const shelves = data?.shelves;
+  const categories = data?.categories;
 
   return (
     <div class="w-full max-w-4xl mx-auto p-4">
@@ -113,7 +124,7 @@ export default function Closet({ data }: { data: ShelfWithItems[] }) {
 
       {/* Shelves and their contents */}
       <div data-island="closet-shelf">
-        <ClosetShelf shelves={shelves} />
+        <ClosetShelf shelves={shelves} categories={categories} />
       </div>
     </div>
   );

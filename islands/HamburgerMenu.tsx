@@ -45,7 +45,7 @@ export function HamburgerMenu({
       {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="fixed inset-0 bg-black opacity-50 z-40"
           onClick={() => setIsOpen(false)}
         />
       )}

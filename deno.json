@@ -1,4 +1,5 @@
 {
+  "version": "0.0.1",
   "lock": false,
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
@@ -32,19 +33,22 @@
     "@radix-ui/react-slot": "npm:@radix-ui/react-slot@^1.1.2",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.3",
     "@supabase/supabase-js": "jsr:@supabase/supabase-js@^2.49.1",
+    "@tailwindcss/postcss": "npm:@tailwindcss/postcss@^4.1.3",
+    "autoprefixer": "npm:autoprefixer@^10.4.21",
     "class-variance-authority": "npm:class-variance-authority@^0.7.1",
     "clsx": "npm:clsx@^2.1.1",
     "date-fns": "npm:date-fns@^4.1.0",
     "lucide-react": "npm:lucide-react@^0.477.0",
+    "postcss": "npm:postcss@^8.5.3",
     "preact": "https://esm.sh/preact@10.22.0",
-    "preact/": "https://esm.sh/preact@10.22.0/",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
-    "react-day-picker": "npm:react-day-picker@8.10.1",
-    "tailwind-merge": "npm:tailwind-merge@^3.0.2",
-    "tailwindcss": "npm:tailwindcss@3.4.1",
+    "react-day-picker": "npm:react-day-picker@^9.6.6",
+    "tailwind-merge": "npm:tailwind-merge@^3.2.0",
+    "tailwindcss": "npm:tailwindcss@^4.1.3",
     "tailwindcss-animate": "npm:tailwindcss-animate@^1.0.7",
-    "@zxing/library": "https://esm.sh/@zxing/library@0.20.0"
+    "@zxing/library": "npm:@zxing/library@^0.21.3",
+    "preact/": "https://esm.sh/preact@10.22.0/"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

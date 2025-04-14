@@ -21,6 +21,16 @@ export class CategoryController {
     return categories || [];
   }
 
+  async getCategoryByName(name: string): Promise<Category | null> {
+    const client = getClient();
+    const { data: category } = await client.from("categories")
+      .select("*")
+      .eq("name", name)
+      .single();
+
+    return category || null;
+  }
+
   async addCategory(name: string): Promise<Category | null> {
     const client = getClient();
     const { data, error } = await client.from("categories")

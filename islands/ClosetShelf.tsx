@@ -2,12 +2,14 @@ import { useState } from "preact/hooks";
 import { InventoryGrid } from "@/components/InventoryGrid.tsx";
 import { ShelfWithItems } from "@/controllers/shelves.controller.ts";
 import BarcodeScanner from "@/islands/BarcodeScanner.tsx";
+import { Category } from "@/controllers/category.controller.ts";
 
 interface ClosetShelfProps {
   shelves: ShelfWithItems[];
+  categories: Category[];
 }
 
-export default function ClosetShelf({ shelves }: ClosetShelfProps) {
+export default function ClosetShelf({ shelves, categories }: ClosetShelfProps) {
   const [selectedShelf, setSelectedShelf] = useState<number | null>(null);
   const [view, setView] = useState<"options" | "items">("options");
   const [barcodeInput, setBarcodeInput] = useState("");
@@ -113,8 +115,11 @@ export default function ClosetShelf({ shelves }: ClosetShelfProps) {
                   </h4>
 
                   {/* Barcode search form */}
-                  <div class="mb-4">
-                    <form onSubmit={handleBarcodeSearch} class="flex gap-2">
+                  <div class="mb-4 w-full">
+                    <form
+                      onSubmit={handleBarcodeSearch}
+                      class="flex flex-col gap-2"
+                    >
                       <input
                         type="text"
                         value={barcodeInput}
@@ -124,31 +129,44 @@ export default function ClosetShelf({ shelves }: ClosetShelfProps) {
                         class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         autoFocus
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowScanner(true)}
-                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
+                      <div class="flex justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setShowScanner(true)}
+                          class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          <path
-                            fill-rule="evenodd"
-                            d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2v1h1V5h-1z"
-                            clip-rule="evenodd"
-                          />
-                          <path d="M11 4a1 1 0 10-2 0v1a1 1 0 002 0V4zM10 7a1 1 0 011 1v1h2a1 1 0 110 2h-3a1 1 0 01-1-1V8a1 1 0 011-1zM16 9a1 1 0 100 2 1 1 0 000-2zM9 13a1 1 0 011-1h1a1 1 0 110 2v2a1 1 0 11-2 0v-3zM7 11a1 1 0 100-2H4a1 1 0 100 2h3zM17 13a1 1 0 01-1 1h-2a1 1 0 110-2h2a1 1 0 011 1zM16 17a1 1 0 100-2h-3a1 1 0 100 2h3z" />
-                        </svg>
-                      </button>
-                      <button
-                        type="submit"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        Search
-                      </button>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2v1h1V5h-1z"
+                              clip-rule="evenodd"
+                            />
+                            <path d="M11 4a1 1 0 10-2 0v1a1 1 0 002 0V4zM10 7a1 1 0 011 1v1h2a1 1 0 110 2h-3a1 1 0 01-1-1V8a1 1 0 011-1zM16 9a1 1 0 100 2 1 1 0 000-2zM9 13a1 1 0 011-1h1a1 1 0 110 2v2a1 1 0 11-2 0v-3zM7 11a1 1 0 100-2H4a1 1 0 100 2h3zM17 13a1 1 0 01-1 1h-2a1 1 0 110-2h2a1 1 0 011 1zM16 17a1 1 0 100-2h-3a1 1 0 100 2h3z" />
+                          </svg>
+                        </button>
+                        <button
+                          type="submit"
+                          class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </div>
                     </form>
                   </div>
 
@@ -175,6 +193,27 @@ export default function ClosetShelf({ shelves }: ClosetShelfProps) {
                             required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
+                        </div>
+                        <div>
+                          <label
+                            for="category"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                          >
+                            Category
+                          </label>
+                          <select
+                            id="category"
+                            name="category"
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Select a category</option>
+                            {categories?.map((category) => (
+                              <option key={category.id} value={category.id}>
+                                {category.name}
+                              </option>
+                            ))}
+                          </select>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -210,7 +249,7 @@ export default function ClosetShelf({ shelves }: ClosetShelfProps) {
                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                           </div>
-                          <div>
+                          <div class="col-span-2">
                             <label
                               for="expirationDate"
                               class="block text-sm font-medium text-gray-700 mb-1"
