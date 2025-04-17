@@ -1,15 +1,12 @@
 import { useEffect, useState } from "preact/hooks";
 
-import {
-  Category,
-  CategoryController,
-} from "@/controllers/category.controller.ts";
+import { Category } from "@/controllers/category.controller.ts";
 import { InventoryItem } from "@/controllers/inventory.controller.ts";
 import CategoryForm from "@/islands/CategoryForm.tsx";
 import DeleteCategoryButton from "@/islands/DeleteCategoryButton.tsx";
 
 export type InventoryData = {
-  inventory: Record<string, InventoryItem>;
+  inventory: InventoryItem[];
   categories: Category[];
 };
 
@@ -46,19 +43,22 @@ export default function Inventory(
         <div class="md:col-span-2">
           <div class="bg-white shadow rounded-lg p-6">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Items</h2>
-            {data.inventory && Object.entries(data.inventory).length > 0
+            {data.inventory && data.inventory.length > 0
               ? (
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {Object.entries(data.inventory).map(([barcode, item]) => (
+                  {data.inventory.map((
+                    { barcode, name, quantity, category_id },
+                  ) => (
                     <div key={barcode} class="bg-gray-50 p-4 rounded-md">
                       <h3 class="font-medium text-lg text-gray-800">
-                        {item.name}
+                        {name}
                       </h3>
-                      <p class="text-gray-600">Quantity: {item.quantity}</p>
-                      {item.category_id && (
+                      <p class="text-gray-600">Quantity: {quantity}</p>
+                      {category_id && (
                         <p class="text-gray-600">
-                          Category: {data.categories.find((c) =>
-                            c.id === item.category_id
+                          Category:{" "}
+                          {data.categories.find((category) =>
+                            category.id === category_id
                           )?.name || "Unknown"}
                         </p>
                       )}

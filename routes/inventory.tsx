@@ -15,7 +15,7 @@ export const handler: Handlers<InventoryData> = {
     ]);
 
     return ctx.render({
-      inventory: inventory ?? {},
+      inventory: inventory ?? [],
       categories: categories ?? [],
     });
   },

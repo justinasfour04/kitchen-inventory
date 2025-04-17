@@ -8,9 +8,14 @@ import {
   type InventoryItem,
 } from "@/controllers/inventory.controller.ts";
 import ClosetShelf from "@/islands/ClosetShelf.tsx";
-import { CategoryController, Category } from "@/controllers/category.controller.ts";
+import {
+  Category,
+  CategoryController,
+} from "@/controllers/category.controller.ts";
 
-export const handler: Handlers<{ shelves: ShelfWithItems[]; categories: Category[] }> = {
+export const handler: Handlers<
+  { shelves: ShelfWithItems[]; categories: Category[] }
+> = {
   async GET(_req, ctx) {
     const shelvesController = new ShelvesController();
     const categoriesController = new CategoryController();
@@ -90,7 +95,9 @@ export const handler: Handlers<{ shelves: ShelfWithItems[]; categories: Category
   },
 };
 
-export default function Closet({ data }: { data: { shelves: ShelfWithItems[]; categories: Category[] } }) {
+export default function Closet(
+  { data }: { data: { shelves: ShelfWithItems[]; categories: Category[] } },
+) {
   // Use data from the handler if available, otherwise use sample data
   const shelves = data?.shelves;
   const categories = data?.categories;

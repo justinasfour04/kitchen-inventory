@@ -9,17 +9,14 @@ export type InventoryItem = Omit<
 export class InventoryController {
   constructor() {}
 
-  async getInventory(): Promise<Record<string, InventoryItem> | null> {
+  async getInventory(): Promise<InventoryItem[] | null> {
     const client = getClient();
     const {
       data: items,
     } = await client.from("items").select("*");
 
     if (items) {
-      return items.reduce((groupedByBarcode, item) => {
-        groupedByBarcode[item.barcode] = item;
-        return groupedByBarcode;
-      }, {} as Record<string, InventoryItem>);
+      return items as InventoryItem[];
     }
 
     return null;
@@ -34,7 +31,8 @@ export class InventoryController {
 
     const {
       data: category,
-    } = await client.from("categories").select("id").eq("id", categoryId).single();
+    } = await client.from("categories").select("id").eq("id", categoryId)
+      .single();
     if (category?.id !== categoryId) {
       throw new Error("Category not found");
     }

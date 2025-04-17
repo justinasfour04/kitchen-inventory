@@ -1,0 +1,3 @@
+ALTER TABLE items 
+  ALTER COLUMN shelf_id SET NOT NULL,
+  ALTER COLUMN category_id SET NOT NULL

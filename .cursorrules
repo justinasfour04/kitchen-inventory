@@ -109,3 +109,5 @@
 - Maintain clean commit history
 - Review code changes thoroughly
 - Follow semantic versioning for releases 
+
+- No single letter variable names EVER

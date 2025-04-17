@@ -1,24 +1,47 @@
 import { useState } from "preact/hooks";
 import { InventoryItemWithCategoryAndShelf } from "@/lib/types.ts";
 
-function ItemCard({ item, showTitle = false }: { item: InventoryItemWithCategoryAndShelf, showTitle?: boolean }) {
+function ItemCard(
+  { item, showTitle = false }: {
+    item: InventoryItemWithCategoryAndShelf;
+    showTitle?: boolean;
+  },
+) {
   return (
     <div>
       {showTitle && <h4 class="font-medium text-gray-900">{item.name}</h4>}
-      <p class="text-sm text-gray-600">Qty: {item.quantity}</p>
-      <p class="text-sm text-gray-600">Category: {item.category?.name}</p>
-      <p class="text-sm text-gray-600">Shelf: {item.shelf?.name}</p>
-      <p class="text-sm text-gray-600">
-        Expiration Date: {item.expiration_date}
-      </p>
-      <p class="text-sm text-gray-600">Unit: {item.unit}</p>
-      <p class="text-sm text-gray-600">
-        Minimum Quantity: {item.minimum_quantity}
-      </p>
-      <p class="text-sm text-gray-600">Barcode: {item.barcode}</p>
+      {[
+        { label: "Qty", value: item.quantity },
+        { label: "Category", value: item.category?.name },
+        { label: "Shelf", value: item.shelf?.name },
+        { label: "Expiration Date", value: item.expiration_date },
+        { label: "Unit", value: item.unit },
+        { label: "Minimum Quantity", value: item.minimum_quantity },
+        { label: "Barcode", value: item.barcode },
+      ].map(({ label, value }) => (
+        <p class="text-sm text-gray-600">
+          {label}: {value}
+        </p>
+      ))}
     </div>
   );
 }
+
+const handleScroll = (el: HTMLDivElement) => {
+  const leftButton = document.getElementById("scrollLeftButton");
+  const rightButton = document.getElementById(
+    "scrollRightButton",
+  );
+
+  if (leftButton) {
+    leftButton.style.display = el.scrollLeft > 0 ? "block" : "none";
+  }
+
+  if (rightButton) {
+    rightButton.style.display =
+      el.scrollLeft < (el.scrollWidth - el.clientWidth - 10) ? "block" : "none";
+  }
+};
 
 export default function InventoryModal(
   { items }: { items: InventoryItemWithCategoryAndShelf[] },
@@ -29,27 +52,65 @@ export default function InventoryModal(
 
   return (
     <div>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {items.map((item) => (
-          <div
-            key={item.barcode}
-            onClick={() => setSelectedItem(item)}
-            class="cursor-pointer bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 border border-gray-200"
-          >
-            <div class="aspect-square w-full bg-gray-100 rounded-md mb-2 flex items-center justify-center">
-              {item.image
-                ? (
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    class="object-cover w-full h-full rounded-md"
-                  />
-                )
-                : <div class="text-gray-400">No Image</div>}
+      <div class="relative overflow-x-auto">
+        <div
+          id="inventoryScroller"
+          class="flex gap-4 snap-x snap-mandatory overflow-x-auto pb-6 px-4"
+          ref={(el) => {
+            if (el) {
+              // Add scroll event listener to update button visibility
+              el.addEventListener("scroll", () => handleScroll(el));
+
+              // Initial button visibility check
+              setTimeout(() => handleScroll(el), 100);
+            }
+          }}
+        >
+          {items.map((item) => (
+            <div
+              key={item.barcode}
+              onClick={() => setSelectedItem(item)}
+              class="snap-center shrink-0 first:ml-0 cursor-pointer bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 border border-gray-200 w-[17rem]"
+            >
+              <div class="aspect-square w-full bg-gray-100 rounded-md mb-2 flex items-center justify-center">
+                {item.image
+                  ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      class="object-cover w-full h-full rounded-md"
+                    />
+                  )
+                  : <div class="text-gray-400">No Image</div>}
+              </div>
+              <ItemCard item={item} showTitle />
             </div>
-            <ItemCard item={item} showTitle />
-          </div>
-        ))}
+          ))}
+        </div>
+        <div
+          id="scrollLeftButton"
+          class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-r-lg shadow-md hidden"
+          onClick={() => {
+            const scroller = document.getElementById("inventoryScroller");
+            if (scroller) {
+              scroller.scrollBy({ left: -300, behavior: "smooth" });
+            }
+          }}
+        >
+          <button class="text-gray-600 hover:text-gray-900">←</button>
+        </div>
+        <div
+          id="scrollRightButton"
+          class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-l-lg shadow-md"
+          onClick={() => {
+            const scroller = document.getElementById("inventoryScroller");
+            if (scroller) {
+              scroller.scrollBy({ left: 300, behavior: "smooth" });
+            }
+          }}
+        >
+          <button class="text-gray-600 hover:text-gray-900">→</button>
+        </div>
       </div>
 
       {/* Item Detail Modal */}
